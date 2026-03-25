@@ -1,0 +1,65 @@
+@import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Assistant:wght@200;300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap');
+
+@import "tailwindcss";
+
+@theme {
+  --font-serif: 'Frank Ruhl Libre', 'Cormorant Garamond', serif;
+  --font-sans: 'Assistant', 'Inter', sans-serif;
+
+  --color-background: hsl(40, 33%, 98%);
+  --color-foreground: hsl(28, 10%, 22%);
+  --color-primary: hsl(30, 22%, 50%);
+  --color-primary-foreground: hsl(40, 33%, 98%);
+  --color-secondary: hsl(37, 30%, 93%);
+  --color-muted: hsl(37, 30%, 93%);
+  --color-muted-foreground: hsl(28, 10%, 35%);
+  --color-accent: hsl(37, 30%, 90%);
+  --color-border: hsl(35, 20%, 88%);
+  --color-ring: hsl(30, 22%, 50%);
+
+  --radius: 0.75rem;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+body {
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  font-family: var(--font-sans);
+  direction: rtl;
+  margin: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+.font-serif {
+  font-family: var(--font-serif);
+}
+
+.font-sans {
+  font-family: var(--font-sans);
+}
+
+/* Elegant scrollbar */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  background: hsl(40, 33%, 98%);
+}
+::-webkit-scrollbar-thumb {
+  background: hsl(30, 22%, 75%);
+  border-radius: 3px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
