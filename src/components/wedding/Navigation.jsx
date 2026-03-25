@@ -35,10 +35,10 @@ export default function Navigation() {
         <div
           className={`transition-all duration-500 ${
             isScrolled
-              ? "backdrop-blur-md shadow-[0_1px_0_0_hsl(35,20%,88%)]"
+              ? "backdrop-blur-md shadow-[0_1px_0_0_hsl(35,20%,82%)]"
               : "bg-transparent"
           }`}
-          style={isScrolled ? { backgroundColor: "rgba(253,252,248,0.9)" } : {}}
+          style={isScrolled ? { backgroundColor: "rgba(245,240,232,0.9)" } : {}}
         >
           <div className="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
             {/* Logo */}
@@ -91,7 +91,7 @@ export default function Navigation() {
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
-            <div className="absolute inset-0 backdrop-blur-lg" style={{ backgroundColor: "rgba(253,252,248,0.98)" }} />
+            <div className="absolute inset-0 backdrop-blur-lg" style={{ backgroundColor: "rgba(245,240,232,0.98)" }} />
             <nav className="relative flex flex-col items-center justify-center h-full gap-8">
               {navItems.map((item, i) => (
                 <motion.div
