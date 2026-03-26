@@ -11,7 +11,7 @@ export default function Story() {
       <section className="text-center px-6 py-16 md:py-24">
         <motion.p
           className="font-sans text-xs tracking-[0.35em] uppercase mb-4"
-          style={{ color: "#9C8465" }}
+          style={{ color: "#8B7355" }}
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.8 }}
@@ -19,7 +19,7 @@ export default function Story() {
           קצת עלינו
         </motion.p>
         <motion.h1
-          className="font-serif text-4xl md:text-6xl font-light"
+          className="font-serif text-4xl md:text-6xl font-normal"
           style={{ color: "#3D3832" }}
           initial={{ opacity: 0, y: 20, filter: "blur(6px)" }}
           animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
@@ -29,7 +29,7 @@ export default function Story() {
         </motion.h1>
         <motion.div
           className="w-12 h-px mx-auto mt-6"
-          style={{ backgroundColor: "#9C8465" }}
+          style={{ backgroundColor: "#8B7355" }}
           initial={{ scaleX: 0 }}
           animate={{ scaleX: 1 }}
           transition={{ delay: 0.6, duration: 0.6 }}
@@ -54,7 +54,7 @@ export default function Story() {
           <div>
             <ScrollReveal delay={0.2}>
               <h2
-                  className="font-serif text-2xl md:text-3xl font-light mb-6"
+                  className="font-serif text-2xl md:text-3xl font-normal mb-6"
                   style={{ color: "#3D3832" }}
                 >
                   שני & גיא
@@ -109,14 +109,14 @@ export default function Story() {
             <ScrollReveal key={i} delay={i * 0.08}>
               <div className="flex items-center gap-6">
                 <p
-                  className="font-serif text-sm md:text-base font-light flex-shrink-0 w-24 text-left"
-                  style={{ color: "#9C8465" }}
+                  className="font-serif text-sm md:text-base font-normal flex-shrink-0 w-24 text-left"
+                  style={{ color: "#8B7355" }}
                 >
                   {milestone.date}
                 </p>
                 <div
                   className="w-2 h-2 rounded-full flex-shrink-0"
-                  style={{ backgroundColor: "#E6E0D4" }}
+                  style={{ backgroundColor: "#D9D1C2" }}
                 />
                 <p
                   className="font-sans text-sm font-light"
@@ -134,8 +134,8 @@ export default function Story() {
       <section className="text-center px-6 pb-8">
         <ScrollReveal>
           <p
-            className="font-serif text-xl md:text-2xl font-light italic leading-relaxed"
-            style={{ color: "#9C8465" }}
+            className="font-serif text-xl md:text-2xl font-normal italic leading-relaxed"
+            style={{ color: "#8B7355" }}
           >
             ״הסיפור הכי יפה שלנו — רק מתחיל״
           </p>

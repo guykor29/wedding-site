@@ -23,7 +23,7 @@ export default function Layout() {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen" style={{ backgroundColor: "#FDFCF8" }}>
+    <div className="min-h-screen" style={{ backgroundColor: "#F5F0E8" }}>
       <Navigation />
       <AnimatePresence mode="wait">
         <motion.main

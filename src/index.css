@@ -1,21 +1,21 @@
-@import url('https://fonts.googleapis.com/css2?family=Frank+Ruhl+Libre:wght@300;400;500;700;900&family=Assistant:wght@200;300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=David+Libre:wght@400;500;700&family=Heebo:wght@200;300;400;500;600;700&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,300;1,400;1,500&display=swap');
 
 @import "tailwindcss";
 
 @theme {
-  --font-serif: 'Frank Ruhl Libre', 'Cormorant Garamond', serif;
-  --font-sans: 'Assistant', 'Inter', sans-serif;
+  --font-serif: 'David Libre', 'Cormorant Garamond', serif;
+  --font-sans: 'Heebo', 'Inter', sans-serif;
 
-  --color-background: hsl(40, 33%, 98%);
+  --color-background: #F5F0E8;
   --color-foreground: hsl(28, 10%, 22%);
-  --color-primary: hsl(30, 22%, 50%);
-  --color-primary-foreground: hsl(40, 33%, 98%);
-  --color-secondary: hsl(37, 30%, 93%);
-  --color-muted: hsl(37, 30%, 93%);
+  --color-primary: #8B7355;
+  --color-primary-foreground: #F5F0E8;
+  --color-secondary: hsl(37, 28%, 90%);
+  --color-muted: hsl(37, 28%, 90%);
   --color-muted-foreground: hsl(28, 10%, 35%);
-  --color-accent: hsl(37, 30%, 90%);
-  --color-border: hsl(35, 20%, 88%);
-  --color-ring: hsl(30, 22%, 50%);
+  --color-accent: hsl(37, 28%, 87%);
+  --color-border: #D9D1C2;
+  --color-ring: #8B7355;
 
   --radius: 0.75rem;
 }
@@ -49,10 +49,10 @@ html {
   width: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: hsl(40, 33%, 98%);
+  background: #F5F0E8;
 }
 ::-webkit-scrollbar-thumb {
-  background: hsl(30, 22%, 75%);
+  background: hsl(30, 22%, 70%);
   border-radius: 3px;
 }
 

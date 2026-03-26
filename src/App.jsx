@@ -15,10 +15,10 @@ export default function App() {
           <Route path="/story" element={<Story />} />
         </Route>
         <Route path="*" element={
-          <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#FDFCF8" }}>
+          <div className="min-h-screen flex items-center justify-center" style={{ backgroundColor: "#F5F0E8" }}>
             <div className="text-center">
-              <h1 className="font-serif text-4xl font-light mb-4" style={{ color: "#3D3832" }}>404</h1>
-              <p className="font-sans text-sm" style={{ color: "#9C8465" }}>העמוד לא נמצא</p>
+              <h1 className="font-serif text-4xl font-normal mb-4" style={{ color: "#3D3832" }}>404</h1>
+              <p className="font-sans text-sm" style={{ color: "#8B7355" }}>העמוד לא נמצא</p>
             </div>
           </div>
         } />

@@ -10,10 +10,10 @@ function DoorOrnament({ flip }) {
       width="80" height="80" viewBox="0 0 80 80"
       style={{ transform: flip ? "scaleX(-1)" : undefined, opacity: 0.25 }}
     >
-      <path d="M10,70 Q10,10 70,10" fill="none" stroke="#9C8465" strokeWidth="0.8" />
-      <path d="M18,70 Q18,18 70,18" fill="none" stroke="#9C8465" strokeWidth="0.5" />
-      <circle cx="12" cy="12" r="2" fill="#9C8465" opacity="0.4" />
-      <path d="M8,60 Q8,8 60,8" fill="none" stroke="#9C8465" strokeWidth="0.3" />
+      <path d="M10,70 Q10,10 70,10" fill="none" stroke="#8B7355" strokeWidth="0.8" />
+      <path d="M18,70 Q18,18 70,18" fill="none" stroke="#8B7355" strokeWidth="0.5" />
+      <circle cx="12" cy="12" r="2" fill="#8B7355" opacity="0.4" />
+      <path d="M8,60 Q8,8 60,8" fill="none" stroke="#8B7355" strokeWidth="0.3" />
     </svg>
   );
 }
@@ -59,7 +59,7 @@ export default function EnvelopeReveal({ onReveal }) {
       {stage !== "done" && (
         <motion.div
           className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
-          style={{ backgroundColor: "#FDFCF8" }}
+          style={{ backgroundColor: "#F5F0E8" }}
           exit={{ opacity: 0 }}
           transition={{ duration: 1.2, ease: "easeInOut" }}
         >
@@ -70,7 +70,7 @@ export default function EnvelopeReveal({ onReveal }) {
               width: "160vmax",
               height: "160vmax",
               borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(196,169,125,0.12) 0%, rgba(156,132,101,0.04) 40%, transparent 65%)",
+              background: "radial-gradient(circle, rgba(175,151,108,0.12) 0%, rgba(139,115,85,0.04) 40%, transparent 65%)",
             }}
             initial={{ scale: 0, opacity: 0 }}
             animate={stage !== "idle" ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
@@ -86,19 +86,19 @@ export default function EnvelopeReveal({ onReveal }) {
             transition={{ duration: 1.6, ease: [0.76, 0, 0.24, 1] }}
           >
             <div className="absolute inset-0" style={{
-              background: "linear-gradient(135deg, #EBE4D8 0%, #DDD5C7 30%, #D1C8B8 60%, #C8BEA8 100%)",
+              background: "linear-gradient(135deg, #E5DDD0 0%, #D7CFC0 30%, #CBC2B0 60%, #C2B8A2 100%)",
             }} />
             <div className="absolute inset-3 md:inset-6 pointer-events-none" style={{
-              border: "0.5px solid rgba(156,132,101,0.2)",
+              border: "0.5px solid rgba(139,115,85,0.2)",
             }} />
             <div className="absolute inset-6 md:inset-12 pointer-events-none" style={{
-              border: "0.5px solid rgba(156,132,101,0.12)",
+              border: "0.5px solid rgba(139,115,85,0.12)",
             }} />
             <div className="absolute top-4 left-4 md:top-8 md:left-8"><DoorOrnament /></div>
             <div className="absolute bottom-4 right-4 md:bottom-8 md:right-8" style={{ transform: "rotate(180deg)" }}><DoorOrnament /></div>
             <div className="absolute top-0 right-0 bottom-0" style={{
               width: 3,
-              background: "linear-gradient(to right, transparent, rgba(156,132,101,0.2))",
+              background: "linear-gradient(to right, transparent, rgba(139,115,85,0.2))",
             }} />
             <motion.div
               className="absolute top-1/2 -translate-y-1/2"
@@ -106,7 +106,7 @@ export default function EnvelopeReveal({ onReveal }) {
               animate={isOpening ? { opacity: 0 } : { opacity: 1 }}
               transition={{ duration: 0.2 }}
             >
-              <div style={{ width: 3, height: 40, borderRadius: 2, backgroundColor: "#9C8465", opacity: 0.3 }} />
+              <div style={{ width: 3, height: 40, borderRadius: 2, backgroundColor: "#8B7355", opacity: 0.3 }} />
             </motion.div>
           </motion.div>
 
@@ -119,19 +119,19 @@ export default function EnvelopeReveal({ onReveal }) {
             transition={{ duration: 1.6, ease: [0.76, 0, 0.24, 1] }}
           >
             <div className="absolute inset-0" style={{
-              background: "linear-gradient(225deg, #EBE4D8 0%, #DDD5C7 30%, #D1C8B8 60%, #C8BEA8 100%)",
+              background: "linear-gradient(225deg, #E5DDD0 0%, #D7CFC0 30%, #CBC2B0 60%, #C2B8A2 100%)",
             }} />
             <div className="absolute inset-3 md:inset-6 pointer-events-none" style={{
-              border: "0.5px solid rgba(156,132,101,0.2)",
+              border: "0.5px solid rgba(139,115,85,0.2)",
             }} />
             <div className="absolute inset-6 md:inset-12 pointer-events-none" style={{
-              border: "0.5px solid rgba(156,132,101,0.12)",
+              border: "0.5px solid rgba(139,115,85,0.12)",
             }} />
             <div className="absolute top-4 right-4 md:top-8 md:right-8"><DoorOrnament flip /></div>
             <div className="absolute bottom-4 left-4 md:bottom-8 md:left-8" style={{ transform: "rotate(180deg)" }}><DoorOrnament flip /></div>
             <div className="absolute top-0 left-0 bottom-0" style={{
               width: 3,
-              background: "linear-gradient(to left, transparent, rgba(156,132,101,0.2))",
+              background: "linear-gradient(to left, transparent, rgba(139,115,85,0.2))",
             }} />
             <motion.div
               className="absolute top-1/2 -translate-y-1/2"
@@ -139,14 +139,14 @@ export default function EnvelopeReveal({ onReveal }) {
               animate={isOpening ? { opacity: 0 } : { opacity: 1 }}
               transition={{ duration: 0.2 }}
             >
-              <div style={{ width: 3, height: 40, borderRadius: 2, backgroundColor: "#9C8465", opacity: 0.3 }} />
+              <div style={{ width: 3, height: 40, borderRadius: 2, backgroundColor: "#8B7355", opacity: 0.3 }} />
             </motion.div>
           </motion.div>
 
           {/* CENTER SEAM */}
           <motion.div
             className="absolute top-0 bottom-0 z-30"
-            style={{ left: "50%", width: 1, transform: "translateX(-50%)", backgroundColor: "rgba(156,132,101,0.2)" }}
+            style={{ left: "50%", width: 1, transform: "translateX(-50%)", backgroundColor: "rgba(139,115,85,0.2)" }}
             animate={isOpening ? { opacity: 0 } : { opacity: 1 }}
             transition={{ duration: 0.2 }}
           />
@@ -158,7 +158,7 @@ export default function EnvelopeReveal({ onReveal }) {
               left: "50%",
               transform: "translateX(-50%)",
               width: 2,
-              background: "linear-gradient(to bottom, transparent, rgba(212,188,148,0.9) 40%, rgba(196,169,125,1) 50%, rgba(212,188,148,0.9) 60%, transparent)",
+              background: "linear-gradient(to bottom, transparent, rgba(190,168,130,0.9) 40%, rgba(175,151,108,1) 50%, rgba(190,168,130,0.9) 60%, transparent)",
               filter: "blur(1px)",
             }}
             initial={{ height: 0, top: "50%", opacity: 0 }}
@@ -188,7 +188,7 @@ export default function EnvelopeReveal({ onReveal }) {
               transform: "translateX(-50%)",
               width: 40,
               height: "100%",
-              background: "radial-gradient(ellipse 100% 50% at center, rgba(196,169,125,0.3) 0%, transparent 70%)",
+              background: "radial-gradient(ellipse 100% 50% at center, rgba(175,151,108,0.3) 0%, transparent 70%)",
               filter: "blur(8px)",
             }}
             initial={{ opacity: 0 }}
@@ -209,7 +209,7 @@ export default function EnvelopeReveal({ onReveal }) {
               transform: "translate(-50%, -50%)",
               width: 8,
               height: "120%",
-              background: "radial-gradient(ellipse 100% 50% at center, rgba(212,188,148,0.6) 0%, rgba(196,169,125,0.2) 40%, transparent 70%)",
+              background: "radial-gradient(ellipse 100% 50% at center, rgba(190,168,130,0.6) 0%, rgba(175,151,108,0.2) 40%, transparent 70%)",
               filter: "blur(12px)",
             }}
             initial={{ scaleX: 1, opacity: 0 }}
@@ -232,8 +232,8 @@ export default function EnvelopeReveal({ onReveal }) {
                   height: s.size,
                   left: "50%",
                   top: "50%",
-                  background: "radial-gradient(circle, rgba(212,188,148,0.9), rgba(196,169,125,0.5))",
-                  boxShadow: "0 0 4px rgba(196,169,125,0.5)",
+                  background: "radial-gradient(circle, rgba(190,168,130,0.9), rgba(175,151,108,0.5))",
+                  boxShadow: "0 0 4px rgba(175,151,108,0.5)",
                 }}
                 initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
                 animate={{
@@ -258,7 +258,7 @@ export default function EnvelopeReveal({ onReveal }) {
               style={{
                 width: 220,
                 height: 220,
-                background: "radial-gradient(circle, rgba(196,169,125,0.15) 0%, transparent 65%)",
+                background: "radial-gradient(circle, rgba(175,151,108,0.15) 0%, transparent 65%)",
               }}
               initial={{ scale: 0, opacity: 0 }}
               animate={isRevealed ? { scale: 1.8, opacity: 1 } : { scale: 0, opacity: 0 }}
@@ -276,13 +276,13 @@ export default function EnvelopeReveal({ onReveal }) {
 
             <div className="flex items-center gap-4 mt-5">
               <motion.div
-                style={{ height: 0.5, backgroundColor: "#9C8465", opacity: 0.4 }}
+                style={{ height: 0.5, backgroundColor: "#8B7355", opacity: 0.4 }}
                 initial={{ width: 0 }}
                 animate={showText ? { width: 40 } : { width: 0 }}
                 transition={{ duration: 0.6, delay: 0, ease: "easeOut" }}
               />
               <motion.p
-                className="font-serif text-2xl md:text-3xl font-light tracking-wider"
+                className="font-serif text-2xl md:text-3xl font-normal tracking-wider"
                 style={{ color: "#3D3832" }}
                 initial={{ opacity: 0, y: 15, filter: "blur(4px)" }}
                 animate={showText ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 15, filter: "blur(4px)" }}
@@ -291,7 +291,7 @@ export default function EnvelopeReveal({ onReveal }) {
                 שני & גיא
               </motion.p>
               <motion.div
-                style={{ height: 0.5, backgroundColor: "#9C8465", opacity: 0.4 }}
+                style={{ height: 0.5, backgroundColor: "#8B7355", opacity: 0.4 }}
                 initial={{ width: 0 }}
                 animate={showText ? { width: 40 } : { width: 0 }}
                 transition={{ duration: 0.6, delay: 0, ease: "easeOut" }}
@@ -300,7 +300,7 @@ export default function EnvelopeReveal({ onReveal }) {
 
             <motion.p
               className="font-sans text-xs tracking-[0.3em] mt-3"
-              style={{ color: "#9C8465" }}
+              style={{ color: "#8B7355" }}
               initial={{ opacity: 0, y: 10 }}
               animate={showText ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
               transition={{ duration: 0.7, delay: 0.3 }}
@@ -309,7 +309,7 @@ export default function EnvelopeReveal({ onReveal }) {
             </motion.p>
 
             <motion.p
-              className="font-serif text-sm tracking-[0.35em] uppercase mt-4 font-light"
+              className="font-serif text-sm tracking-[0.35em] uppercase mt-4 font-normal"
               style={{ color: "#3D3832", opacity: 0.5 }}
               initial={{ opacity: 0, letterSpacing: "0.5em" }}
               animate={showText ? { opacity: 0.5, letterSpacing: "0.35em" } : { opacity: 0, letterSpacing: "0.5em" }}
@@ -332,7 +332,7 @@ export default function EnvelopeReveal({ onReveal }) {
           >
             <p
               className="font-sans text-xs tracking-[0.35em] uppercase"
-              style={{ color: "#9C8465" }}
+              style={{ color: "#8B7355" }}
             >
               ההזמנה שלנו
             </p>

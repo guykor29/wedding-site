@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 
-const WEDDING_DATE = new Date("2026-05-17T18:00:00");
+const WEDDING_DATE = new Date("2026-05-17T19:30:00");
 
 function getTimeLeft() {
   const now = new Date();
@@ -30,33 +30,50 @@ export default function CountdownTimer() {
   ];
 
   return (
-    <div className="flex items-center gap-6 md:gap-10">
-      {units.map((unit, i) => (
-        <div key={unit.label} className="flex items-center gap-6 md:gap-10">
-          <div className="text-center">
-            <p
-              className="font-serif text-3xl md:text-5xl font-light leading-none mb-1"
-              style={{ color: "#3D3832" }}
+    <div className="text-center">
+      <h2
+        className="font-serif text-2xl md:text-3xl font-bold tracking-[0.2em] uppercase mb-2"
+        style={{ color: "#1A1714" }}
+      >
+        COUNTDOWN
+      </h2>
+      <p
+        className="font-sans text-sm mb-1"
+        style={{ color: "#3D3832", opacity: 0.6 }}
+      >
+        to the big day
+      </p>
+      <div
+        className="w-12 h-px mx-auto mb-6"
+        style={{ backgroundColor: "#8B7355" }}
+      />
+      <div className="flex items-start gap-4 md:gap-6">
+        {units.map((unit) => (
+          <div key={unit.label} className="flex flex-col items-center">
+            <div
+              className="flex items-center justify-center rounded-xl mb-2"
+              style={{
+                backgroundColor: "#E8E0D2",
+                width: "clamp(70px, 18vw, 100px)",
+                height: "clamp(70px, 18vw, 100px)",
+              }}
             >
-              {String(unit.value).padStart(2, "0")}
-            </p>
+              <p
+                className="font-serif text-3xl md:text-5xl font-bold leading-none"
+                style={{ color: "#3D3832" }}
+              >
+                {String(unit.value).padStart(2, "0")}
+              </p>
+            </div>
             <p
-              className="font-sans text-[10px] md:text-xs tracking-[0.2em] uppercase"
-              style={{ color: "#9C8465" }}
+              className="font-sans text-xs tracking-wide"
+              style={{ color: "#3D3832", opacity: 0.6 }}
             >
               {unit.label}
             </p>
           </div>
-          {i < units.length - 1 && (
-            <span
-              className="font-serif text-2xl md:text-3xl font-light opacity-20"
-              style={{ color: "#9C8465" }}
-            >
-              :
-            </span>
-          )}
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 }

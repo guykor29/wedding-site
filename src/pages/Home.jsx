@@ -6,7 +6,6 @@ import CountdownTimer from "../components/wedding/CountdownTimer";
 import ScrollReveal from "../components/wedding/ScrollReveal";
 
 const HERO_IMAGE = "https://media.base44.com/images/public/69c037db1c1fd8961ebfde91/b3fb92277_generated_f8163fbf.png";
-const VENUE_IMAGE = "https://media.base44.com/images/public/69c037db1c1fd8961ebfde91/6e9b87ef6_generated_3caef906.png";
 const LOGO_URL = "/logo.png";
 
 const WAZE_URL = "https://waze.com/ul?q=אליעזר+מזל+6+ראשון+לציון&navigate=yes";
@@ -40,13 +39,13 @@ export default function Home() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
-          style={{ backgroundColor: "#FAF8F4", minHeight: "100vh" }}
+          style={{ backgroundColor: "#F5F0E8", minHeight: "100vh" }}
         >
 
           {/* HERO */}
           <div ref={heroRef}>
             <ScrollReveal delay={0.1}>
-              <div className="relative pt-16" style={{ marginBottom: "14rem" }}>
+              <div className="relative pt-16" style={{ marginBottom: "7rem" }}>
                 <div className="overflow-hidden relative" style={{ borderRadius: 0 }}>
                   <motion.img
                     src={HERO_IMAGE}
@@ -62,15 +61,15 @@ export default function Home() {
                   />
                   <div className="absolute top-0 left-0 right-0" style={{
                     height: "45%",
-                    background: "linear-gradient(to bottom, #FAF8F4 0%, transparent 100%)",
+                    background: "linear-gradient(to bottom, #F5F0E8 0%, transparent 100%)",
                   }} />
                   <div className="absolute bottom-0 left-0 right-0" style={{
                     height: "45%",
-                    background: "linear-gradient(to bottom, transparent 0%, #FAF8F4 100%)",
+                    background: "linear-gradient(to bottom, transparent 0%, #F5F0E8 100%)",
                   }} />
                 </div>
 
-                <div className="absolute left-0 right-0 flex flex-col items-center" style={{ bottom: "-13rem" }}>
+                <div className="absolute left-0 right-0 flex flex-col items-center" style={{ bottom: 0, transform: "translateY(50%)" }}>
                   <motion.img
                     src={LOGO_URL}
                     alt="לוגו שני וגיא"
@@ -83,131 +82,106 @@ export default function Home() {
                     }}
                   />
                   <motion.p
-                    className="font-serif text-5xl font-light tracking-wider text-center mt-3"
+                    className="font-serif text-5xl font-normal tracking-wider text-center mt-3"
                     style={{ color: "#1A1714" }}
                     {...staggerItem(0.15)}
                   >
                     Shani & Guy
-                  </motion.p>
-                  <motion.div
-                    className="w-12 h-px my-2"
-                    style={{ backgroundColor: "#9C8465", opacity: 0.6 }}
-                    {...staggerItem(0.3)}
-                  />
-                  <motion.p
-                    className="font-sans text-base tracking-[0.25em] text-center"
-                    style={{ color: "#9C8465" }}
-                    {...staggerItem(0.45)}
-                  >
-                    17.05.2026
                   </motion.p>
                 </div>
               </div>
             </ScrollReveal>
           </div>
 
-          {/* COUNTDOWN */}
+          {/* WEDDING DAY */}
           <ScrollReveal>
             <div className="text-center px-6 mb-10">
-              <p
-                className="font-sans text-xs tracking-[0.35em] uppercase mb-6"
-                style={{ color: "#9C8465" }}
+              <h2
+                className="font-serif text-2xl md:text-3xl font-bold tracking-[0.3em] uppercase mb-4"
+                style={{ color: "#1A1714" }}
               >
-                ספירה לאחור
+                WEDDING DAY
+              </h2>
+              <div
+                className="w-16 h-px mx-auto mb-4"
+                style={{ backgroundColor: "#8B7355" }}
+              />
+              <p
+                className="font-sans text-lg tracking-[0.15em] mb-2"
+                style={{ color: "#3D3832" }}
+              >
+                17.05.2026
               </p>
-              <div className="flex justify-center">
-                <CountdownTimer />
-              </div>
+              <p
+                className="font-sans text-base"
+                style={{ color: "#3D3832", opacity: 0.7 }}
+              >
+                19:30 | יום ראשון
+              </p>
             </div>
           </ScrollReveal>
 
-          <div className="mx-8 h-px mb-10" style={{ backgroundColor: "#D6CFBF" }} />
+          <div className="mx-8 h-px mb-10" style={{ backgroundColor: "#C9C0AD" }} />
+
+          {/* COUNTDOWN */}
+          <ScrollReveal>
+            <div className="flex justify-center px-6 mb-10">
+              <CountdownTimer />
+            </div>
+          </ScrollReveal>
+
+          <div className="mx-8 h-px mb-10" style={{ backgroundColor: "#C9C0AD" }} />
 
           {/* LOCATION */}
           <ScrollReveal>
-            <div className="text-center px-8 mb-6">
-              <p
-                className="font-sans text-xs tracking-[0.35em] uppercase mb-4"
-                style={{ color: "#9C8465" }}
-              >
-                המקום
-              </p>
+            <div className="text-center px-8 mb-8">
               <h2
-                className="font-serif mb-2"
-                style={{ color: "#1A1714", fontSize: "clamp(1.8rem, 9vw, 3rem)", fontWeight: 300 }}
+                className="font-serif text-xl md:text-2xl font-bold tracking-[0.3em] uppercase mb-3"
+                style={{ color: "#1A1714" }}
               >
-                תרין
+                LOCATION
               </h2>
+              <div
+                className="w-12 h-px mx-auto mb-6"
+                style={{ backgroundColor: "#8B7355" }}
+              />
               <p
-                className="font-sans text-sm font-light mb-2"
+                className="font-sans text-base mb-1"
+                style={{ color: "#3D3832" }}
+              >
+                אולם ״תרין״, ראשון לציון.
+              </p>
+              <p
+                className="font-sans text-base mb-6"
                 style={{ color: "#3D3832", opacity: 0.6 }}
               >
-                רחוב אליעזר מזל 6, ראשון לציון
+                כתובת: אליעזר מזל 6
               </p>
-            </div>
-          </ScrollReveal>
-
-          {/* Venue image */}
-          <ScrollReveal delay={0.1}>
-            <div className="max-w-3xl mx-auto px-6 mb-8">
-              <div className="relative overflow-hidden rounded-sm aspect-[16/9]">
-                <img
-                  src={VENUE_IMAGE}
-                  alt="גן האירועים"
-                  className="w-full h-full object-cover"
-                />
-                <div className="absolute inset-0" style={{
-                  background: "linear-gradient(to top, rgba(61,56,50,0.35) 0%, transparent 50%)",
-                }} />
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-3">
+                <a
+                  href={WAZE_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-sans text-sm tracking-wide border transition-all duration-300 hover:shadow-md min-w-[200px] justify-center"
+                  style={{ borderColor: "#8B7355", color: "#3D3832" }}
+                >
+                  <Navigation size={16} />
+                  ניווט באמצעות Waze
+                </a>
+                <a
+                  href={GOOGLE_MAPS_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 px-8 py-3 rounded-full font-sans text-sm tracking-wide border transition-all duration-300 hover:shadow-md min-w-[200px] justify-center"
+                  style={{ borderColor: "#8B7355", color: "#3D3832" }}
+                >
+                  <MapPin size={16} />
+                  ניווט באמצעות Google Maps
+                </a>
               </div>
             </div>
           </ScrollReveal>
 
-          {/* Navigation buttons */}
-          <ScrollReveal delay={0.15}>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 px-6 mb-12">
-              <a
-                href={WAZE_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-sans text-sm tracking-wide transition-all duration-300 hover:shadow-md min-w-[180px] justify-center"
-                style={{ backgroundColor: "#9C8465", color: "#FDFCF8" }}
-              >
-                <Navigation size={16} />
-                ניווט ב-Waze
-              </a>
-              <a
-                href={GOOGLE_MAPS_URL}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="inline-flex items-center gap-2 px-8 py-3.5 rounded-full font-sans text-sm tracking-wide transition-all duration-300 hover:shadow-md border min-w-[180px] justify-center"
-                style={{ borderColor: "#E6E0D4", color: "#3D3832" }}
-              >
-                <MapPin size={16} />
-                Google Maps
-              </a>
-            </div>
-          </ScrollReveal>
-
-          <div className="mx-8 h-px mb-10" style={{ backgroundColor: "#D6CFBF" }} />
-
-          {/* QUOTE */}
-          <div className="text-center px-8 pt-4 pb-16">
-            <ScrollReveal>
-              <p
-                className="font-serif italic text-lg font-light leading-relaxed"
-                style={{ color: "#9C8465" }}
-              >
-                ״כי מצאתי את שאהבה נפשי״
-              </p>
-              <p
-                className="font-sans text-xs mt-2 tracking-wider"
-                style={{ color: "#3D3832", opacity: 0.35 }}
-              >
-                שיר השירים ג׳, ד׳
-              </p>
-            </ScrollReveal>
-          </div>
 
         </motion.div>
       )}
