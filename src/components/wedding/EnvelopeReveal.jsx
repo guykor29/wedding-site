@@ -1,344 +1,327 @@
-import React, { useState, useEffect, useMemo } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState, useEffect, useCallback, useRef } from "react";
+import { motion } from "framer-motion";
 
 const LOGO_URL = "/logo.png";
+const EASE = [0.25, 0.46, 0.45, 0.94];
+const SNAPPY = [0.76, 0, 0.24, 1];
 
-// Ornamental corner SVG for the doors
-function DoorOrnament({ flip }) {
-  return (
-    <svg
-      width="80" height="80" viewBox="0 0 80 80"
-      style={{ transform: flip ? "scaleX(-1)" : undefined, opacity: 0.25 }}
-    >
-      <path d="M10,70 Q10,10 70,10" fill="none" stroke="#8B7355" strokeWidth="0.8" />
-      <path d="M18,70 Q18,18 70,18" fill="none" stroke="#8B7355" strokeWidth="0.5" />
-      <circle cx="12" cy="12" r="2" fill="#8B7355" opacity="0.4" />
-      <path d="M8,60 Q8,8 60,8" fill="none" stroke="#8B7355" strokeWidth="0.3" />
-    </svg>
-  );
-}
+// Parchment colors
+const PARCHMENT_LIGHT = "#E2D9CA";
+const PARCHMENT = "#D5CCBB";
+const PARCHMENT_DARK = "#C8BEAC";
 
-// Shimmer light particles for the reveal
-function createSparkles(count) {
-  return Array.from({ length: count }, (_, i) => {
-    const angle = (i / count) * Math.PI * 2 + (Math.random() - 0.5) * 0.4;
-    const dist = 80 + Math.random() * 200;
-    return {
-      id: i,
-      x: Math.cos(angle) * dist,
-      y: Math.sin(angle) * dist,
-      size: 2 + Math.random() * 4,
-      delay: Math.random() * 0.5,
-      duration: 0.8 + Math.random() * 0.6,
-    };
-  });
-}
+const parchmentBg = `linear-gradient(145deg, ${PARCHMENT_LIGHT} 0%, ${PARCHMENT} 40%, ${PARCHMENT_DARK} 100%)`;
+
+const textureStyle = {
+  backgroundImage: `
+    radial-gradient(ellipse at 20% 30%, rgba(139,115,85,0.08) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 70%, rgba(139,115,85,0.06) 0%, transparent 50%),
+    radial-gradient(circle at 50% 50%, rgba(139,115,85,0.04) 1px, transparent 1px),
+    radial-gradient(circle at 25% 75%, rgba(139,115,85,0.03) 1px, transparent 1px)
+  `,
+  backgroundSize: "100% 100%, 100% 100%, 14px 14px, 20px 20px",
+};
 
 export default function EnvelopeReveal({ onReveal }) {
   const [stage, setStage] = useState("idle");
-  // idle → shimmer → opening → reveal → text → exit
-  const sparkles = useMemo(() => createSparkles(24), []);
+  // idle → appear → shimmer → open → done
+  const sealSize = typeof window !== "undefined" && window.innerWidth < 640 ? 80 : 110;
+  const timersRef = useRef([]);
+  const acceleratedRef = useRef(false);
 
-  useEffect(() => {
-    const timers = [];
-    timers.push(setTimeout(() => setStage("shimmer"), 500));
-    timers.push(setTimeout(() => setStage("opening"), 2200));
-    timers.push(setTimeout(() => setStage("reveal"), 3600));
-    timers.push(setTimeout(() => setStage("text"), 4400));
-    timers.push(setTimeout(() => setStage("exit"), 6000));
-    timers.push(setTimeout(() => onReveal(), 7000));
-    return () => timers.forEach(clearTimeout);
+  const addTimer = useCallback((fn, delay) => {
+    const id = setTimeout(fn, delay);
+    timersRef.current.push(id);
+    return id;
   }, []);
 
-  const isOpening = stage === "opening" || stage === "reveal" || stage === "text" || stage === "exit";
-  const isRevealed = stage === "reveal" || stage === "text" || stage === "exit";
-  const showText = stage === "text" || stage === "exit";
+  // Tap to accelerate
+  const accelerate = useCallback(() => {
+    if (acceleratedRef.current) return;
+    if (stage === "open" || stage === "done") return;
+    acceleratedRef.current = true;
+    timersRef.current.forEach(clearTimeout);
+    timersRef.current = [];
+    setStage("open");
+    addTimer(() => setStage("done"), 1800);
+    addTimer(() => onReveal(), 1800);
+  }, [stage, onReveal, addTimer]);
+
+  // Auto timeline
+  useEffect(() => {
+    addTimer(() => setStage("appear"), 100);
+    addTimer(() => setStage("shimmer"), 1500);
+    addTimer(() => setStage("open"), 3500);
+    addTimer(() => setStage("done"), 5500);
+    addTimer(() => onReveal(), 5500);
+    return () => timersRef.current.forEach(clearTimeout);
+  }, []);
+
+  const stageIndex = ["idle", "appear", "shimmer", "open", "done"].indexOf(stage);
+  const appeared = stageIndex >= 1;
+  const isOpen = stageIndex >= 3;
+  const isDone = stageIndex >= 4;
+
+  if (isDone) return null;
 
   return (
-    <AnimatePresence>
-      {stage !== "done" && (
-        <motion.div
-          className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden"
-          style={{ backgroundColor: "#F5F0E8" }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 1.2, ease: "easeInOut" }}
+    <div
+      className="fixed inset-0 z-50 overflow-hidden"
+      style={{ perspective: 1400, pointerEvents: "auto" }}
+      onClick={accelerate}
+    >
+      {/* ===== TOP HALF - folds upward, carries the seal ===== */}
+      <motion.div
+        className="absolute top-0 left-0 right-0"
+        style={{
+          height: "50%",
+          transformOrigin: "top center",
+          transformStyle: "preserve-3d",
+          zIndex: 3,
+        }}
+        initial={{ rotateX: 0 }}
+        animate={isOpen ? { rotateX: -180 } : { rotateX: 0 }}
+        transition={{ duration: 1.6, ease: SNAPPY }}
+      >
+        {/* Front face - parchment with flap triangle lines */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: parchmentBg,
+            backfaceVisibility: "hidden",
+          }}
         >
-          {/* AMBIENT RADIAL GLOW */}
-          <motion.div
+          <div className="absolute inset-0" style={textureStyle} />
+
+          {/* Flap fold lines on top half (V shape) */}
+          <div
             className="absolute pointer-events-none"
             style={{
-              width: "160vmax",
-              height: "160vmax",
-              borderRadius: "50%",
-              background: "radial-gradient(circle, rgba(175,151,108,0.12) 0%, rgba(139,115,85,0.04) 40%, transparent 65%)",
+              bottom: 0, left: 0, right: 0, height: "100%",
             }}
-            initial={{ scale: 0, opacity: 0 }}
-            animate={stage !== "idle" ? { scale: 1, opacity: 1 } : { scale: 0, opacity: 0 }}
-            transition={{ duration: 2.5, ease: [0.25, 0.46, 0.45, 0.94] }}
-          />
-
-          {/* LEFT DOOR */}
-          <motion.div
-            className="absolute top-0 left-0 bottom-0 z-20"
-            style={{ width: "50.3%" }}
-            initial={{ x: 0 }}
-            animate={isOpening ? { x: "-102%" } : { x: 0 }}
-            transition={{ duration: 1.6, ease: [0.76, 0, 0.24, 1] }}
           >
-            <div className="absolute inset-0" style={{
-              background: "linear-gradient(135deg, #E5DDD0 0%, #D7CFC0 30%, #CBC2B0 60%, #C2B8A2 100%)",
-            }} />
-            <div className="absolute inset-3 md:inset-6 pointer-events-none" style={{
-              border: "0.5px solid rgba(139,115,85,0.2)",
-            }} />
-            <div className="absolute inset-6 md:inset-12 pointer-events-none" style={{
-              border: "0.5px solid rgba(139,115,85,0.12)",
-            }} />
-            <div className="absolute top-4 left-4 md:top-8 md:left-8"><DoorOrnament /></div>
-            <div className="absolute bottom-4 right-4 md:bottom-8 md:right-8" style={{ transform: "rotate(180deg)" }}><DoorOrnament /></div>
-            <div className="absolute top-0 right-0 bottom-0" style={{
-              width: 3,
-              background: "linear-gradient(to right, transparent, rgba(139,115,85,0.2))",
-            }} />
-            <motion.div
-              className="absolute top-1/2 -translate-y-1/2"
-              style={{ right: 16 }}
-              animate={isOpening ? { opacity: 0 } : { opacity: 1 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div style={{ width: 3, height: 40, borderRadius: 2, backgroundColor: "#8B7355", opacity: 0.3 }} />
-            </motion.div>
-          </motion.div>
-
-          {/* RIGHT DOOR */}
-          <motion.div
-            className="absolute top-0 right-0 bottom-0 z-20"
-            style={{ width: "50.3%" }}
-            initial={{ x: 0 }}
-            animate={isOpening ? { x: "102%" } : { x: 0 }}
-            transition={{ duration: 1.6, ease: [0.76, 0, 0.24, 1] }}
-          >
-            <div className="absolute inset-0" style={{
-              background: "linear-gradient(225deg, #E5DDD0 0%, #D7CFC0 30%, #CBC2B0 60%, #C2B8A2 100%)",
-            }} />
-            <div className="absolute inset-3 md:inset-6 pointer-events-none" style={{
-              border: "0.5px solid rgba(139,115,85,0.2)",
-            }} />
-            <div className="absolute inset-6 md:inset-12 pointer-events-none" style={{
-              border: "0.5px solid rgba(139,115,85,0.12)",
-            }} />
-            <div className="absolute top-4 right-4 md:top-8 md:right-8"><DoorOrnament flip /></div>
-            <div className="absolute bottom-4 left-4 md:bottom-8 md:left-8" style={{ transform: "rotate(180deg)" }}><DoorOrnament flip /></div>
-            <div className="absolute top-0 left-0 bottom-0" style={{
-              width: 3,
-              background: "linear-gradient(to left, transparent, rgba(139,115,85,0.2))",
-            }} />
-            <motion.div
-              className="absolute top-1/2 -translate-y-1/2"
-              style={{ left: 16 }}
-              animate={isOpening ? { opacity: 0 } : { opacity: 1 }}
-              transition={{ duration: 0.2 }}
-            >
-              <div style={{ width: 3, height: 40, borderRadius: 2, backgroundColor: "#8B7355", opacity: 0.3 }} />
-            </motion.div>
-          </motion.div>
-
-          {/* CENTER SEAM */}
-          <motion.div
-            className="absolute top-0 bottom-0 z-30"
-            style={{ left: "50%", width: 1, transform: "translateX(-50%)", backgroundColor: "rgba(139,115,85,0.2)" }}
-            animate={isOpening ? { opacity: 0 } : { opacity: 1 }}
-            transition={{ duration: 0.2 }}
-          />
-
-          {/* SHIMMER LINE */}
-          <motion.div
-            className="absolute z-30 pointer-events-none"
-            style={{
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: 2,
-              background: "linear-gradient(to bottom, transparent, rgba(190,168,130,0.9) 40%, rgba(175,151,108,1) 50%, rgba(190,168,130,0.9) 60%, transparent)",
-              filter: "blur(1px)",
-            }}
-            initial={{ height: 0, top: "50%", opacity: 0 }}
-            animate={
-              stage === "shimmer"
-                ? [
-                    { height: 0, top: "50%", opacity: 1 },
-                    { height: "80%", top: "10%", opacity: 1 },
-                    { height: "100%", top: "0%", opacity: 0.6 },
-                  ]
-                : stage === "opening"
-                  ? { height: "100%", top: "0%", opacity: 0 }
-                  : { height: 0, top: "50%", opacity: 0 }
-            }
-            transition={
-              stage === "shimmer"
-                ? { duration: 1.5, ease: [0.25, 0.46, 0.45, 0.94], times: [0, 0.6, 1] }
-                : { duration: 0.3 }
-            }
-          />
-
-          {/* SHIMMER GLOW */}
-          <motion.div
-            className="absolute z-25 pointer-events-none"
-            style={{
-              left: "50%",
-              transform: "translateX(-50%)",
-              width: 40,
-              height: "100%",
-              background: "radial-gradient(ellipse 100% 50% at center, rgba(175,151,108,0.3) 0%, transparent 70%)",
-              filter: "blur(8px)",
-            }}
-            initial={{ opacity: 0 }}
-            animate={
-              stage === "shimmer" ? { opacity: [0, 0.8, 0.6] }
-                : isOpening ? { opacity: [0.6, 0] }
-                  : { opacity: 0 }
-            }
-            transition={{ duration: stage === "shimmer" ? 1.5 : 0.8 }}
-          />
-
-          {/* LIGHT BURST */}
-          <motion.div
-            className="absolute z-15 pointer-events-none"
-            style={{
-              left: "50%",
-              top: "50%",
-              transform: "translate(-50%, -50%)",
-              width: 8,
-              height: "120%",
-              background: "radial-gradient(ellipse 100% 50% at center, rgba(190,168,130,0.6) 0%, rgba(175,151,108,0.2) 40%, transparent 70%)",
-              filter: "blur(12px)",
-            }}
-            initial={{ scaleX: 1, opacity: 0 }}
-            animate={
-              isOpening
-                ? [{ scaleX: 1, opacity: 0.9 }, { scaleX: 80, opacity: 0 }]
-                : { scaleX: 1, opacity: 0 }
-            }
-            transition={isOpening ? { duration: 1.4, ease: "easeOut", times: [0, 1] } : { duration: 0 }}
-          />
-
-          {/* SPARKLE PARTICLES */}
-          <AnimatePresence>
-            {isOpening && sparkles.map((s) => (
-              <motion.div
-                key={s.id}
-                className="absolute z-25 rounded-full"
-                style={{
-                  width: s.size,
-                  height: s.size,
-                  left: "50%",
-                  top: "50%",
-                  background: "radial-gradient(circle, rgba(190,168,130,0.9), rgba(175,151,108,0.5))",
-                  boxShadow: "0 0 4px rgba(175,151,108,0.5)",
-                }}
-                initial={{ x: 0, y: 0, opacity: 0, scale: 0 }}
-                animate={{
-                  x: s.x,
-                  y: s.y,
-                  opacity: [0, 1, 0],
-                  scale: [0, 1.2, 0],
-                }}
-                transition={{
-                  duration: s.duration,
-                  delay: s.delay,
-                  ease: [0.25, 0.46, 0.45, 0.94],
-                }}
-              />
-            ))}
-          </AnimatePresence>
-
-          {/* CENTER CONTENT */}
-          <div className="absolute flex flex-col items-center justify-center z-10">
-            <motion.div
-              className="absolute rounded-full pointer-events-none"
+            {/* Left diagonal line */}
+            <div
               style={{
-                width: 220,
-                height: 220,
-                background: "radial-gradient(circle, rgba(175,151,108,0.15) 0%, transparent 65%)",
+                position: "absolute",
+                bottom: 0, left: 0,
+                width: "72%", height: 1,
+                background: "linear-gradient(90deg, transparent 5%, rgba(100,85,60,0.18) 40%, rgba(100,85,60,0.22) 100%)",
+                transformOrigin: "bottom left",
+                transform: "rotate(-35deg)",
               }}
-              initial={{ scale: 0, opacity: 0 }}
-              animate={isRevealed ? { scale: 1.8, opacity: 1 } : { scale: 0, opacity: 0 }}
-              transition={{ duration: 2, ease: "easeOut" }}
             />
-
-            <motion.img
-              src={LOGO_URL}
-              alt="לוגו שני וגיא"
-              style={{ width: 100, height: 100, objectFit: "contain" }}
-              initial={{ scale: 0.6, opacity: 0 }}
-              animate={isRevealed ? { scale: 1, opacity: 1 } : { scale: 0.6, opacity: 0 }}
-              transition={{ duration: 1, delay: 0.2, ease: [0.33, 1, 0.68, 1] }}
+            {/* Right diagonal line */}
+            <div
+              style={{
+                position: "absolute",
+                bottom: 0, right: 0,
+                width: "72%", height: 1,
+                background: "linear-gradient(270deg, transparent 5%, rgba(100,85,60,0.18) 40%, rgba(100,85,60,0.22) 100%)",
+                transformOrigin: "bottom right",
+                transform: "rotate(35deg)",
+              }}
             />
-
-            <div className="flex items-center gap-4 mt-5">
-              <motion.div
-                style={{ height: 0.5, backgroundColor: "#8B7355", opacity: 0.4 }}
-                initial={{ width: 0 }}
-                animate={showText ? { width: 40 } : { width: 0 }}
-                transition={{ duration: 0.6, delay: 0, ease: "easeOut" }}
-              />
-              <motion.p
-                className="font-serif text-2xl md:text-3xl font-normal tracking-wider"
-                style={{ color: "#3D3832" }}
-                initial={{ opacity: 0, y: 15, filter: "blur(4px)" }}
-                animate={showText ? { opacity: 1, y: 0, filter: "blur(0px)" } : { opacity: 0, y: 15, filter: "blur(4px)" }}
-                transition={{ duration: 0.8, delay: 0.1, ease: [0.25, 0.46, 0.45, 0.94] }}
-              >
-                שני & גיא
-              </motion.p>
-              <motion.div
-                style={{ height: 0.5, backgroundColor: "#8B7355", opacity: 0.4 }}
-                initial={{ width: 0 }}
-                animate={showText ? { width: 40 } : { width: 0 }}
-                transition={{ duration: 0.6, delay: 0, ease: "easeOut" }}
-              />
-            </div>
-
-            <motion.p
-              className="font-sans text-xs tracking-[0.3em] mt-3"
-              style={{ color: "#8B7355" }}
-              initial={{ opacity: 0, y: 10 }}
-              animate={showText ? { opacity: 1, y: 0 } : { opacity: 0, y: 10 }}
-              transition={{ duration: 0.7, delay: 0.3 }}
-            >
-              17.05.2026
-            </motion.p>
-
-            <motion.p
-              className="font-serif text-sm tracking-[0.35em] uppercase mt-4 font-normal"
-              style={{ color: "#3D3832", opacity: 0.5 }}
-              initial={{ opacity: 0, letterSpacing: "0.5em" }}
-              animate={showText ? { opacity: 0.5, letterSpacing: "0.35em" } : { opacity: 0, letterSpacing: "0.5em" }}
-              transition={{ duration: 0.9, delay: 0.5 }}
-            >
-              Our Wedding
-            </motion.p>
           </div>
 
-          {/* TAGLINE ON DOORS */}
-          <motion.div
-            className="absolute z-30 flex flex-col items-center"
-            initial={{ opacity: 0 }}
-            animate={
-              stage === "shimmer" ? { opacity: 1 }
-                : isOpening ? { opacity: 0 }
-                  : { opacity: 0 }
-            }
-            transition={{ duration: 0.8 }}
+          {/* Shadow at bottom fold edge */}
+          <div
+            className="absolute bottom-0 left-0 right-0 pointer-events-none"
+            style={{
+              height: 25,
+              background: "linear-gradient(to top, rgba(100,85,60,0.12), transparent)",
+            }}
+          />
+
+          {/* === WAX SEAL (on the top half, at the bottom center) === */}
+          <div
+            className="absolute"
+            style={{
+              bottom: -sealSize / 2,
+              left: "50%",
+              marginLeft: -sealSize / 2,
+              width: sealSize,
+              height: sealSize,
+              zIndex: 10,
+            }}
           >
-            <p
-              className="font-sans text-xs tracking-[0.35em] uppercase"
-              style={{ color: "#8B7355" }}
+            <motion.div
+              className="relative w-full h-full"
+              initial={{ scale: 0, opacity: 0 }}
+              animate={appeared ? { scale: 1, opacity: 1 } : {}}
+              transition={{ duration: 0.6, delay: 0.2, ease: "backOut" }}
             >
-              ההזמנה שלנו
-            </p>
-          </motion.div>
-        </motion.div>
-      )}
-    </AnimatePresence>
+              {/* Shadow */}
+              <div
+                className="absolute rounded-full"
+                style={{
+                  inset: -4,
+                  background: "radial-gradient(circle, rgba(0,0,0,0.15) 0%, transparent 70%)",
+                  filter: "blur(8px)",
+                  transform: "translateY(4px)",
+                }}
+              />
+
+              {/* Seal SVG */}
+              <svg viewBox="0 0 100 100" className="absolute inset-0 w-full h-full" style={{ overflow: "visible" }}>
+                <defs>
+                  <radialGradient id="sealGrad" cx="38%" cy="35%">
+                    <stop offset="0%" stopColor="#B8A680" />
+                    <stop offset="40%" stopColor="#9C8666" />
+                    <stop offset="100%" stopColor="#7A6448" />
+                  </radialGradient>
+                </defs>
+                <circle cx="50" cy="50" r="48" fill="url(#sealGrad)" />
+                <circle cx="50" cy="50" r="48" fill="none" stroke="#6B5A42" strokeWidth="2.5" />
+                <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(180,160,130,0.4)" strokeWidth="1" />
+                <circle cx="50" cy="50" r="46" fill="none" stroke="#6B5A42" strokeWidth="0.7" strokeDasharray="2 2" />
+                <circle cx="50" cy="50" r="37" fill="none" stroke="rgba(180,160,130,0.35)" strokeWidth="0.6" />
+                <ellipse cx="38" cy="36" rx="16" ry="13" fill="rgba(255,255,255,0.1)" />
+              </svg>
+
+              {/* Logo */}
+              <div
+                className="absolute flex items-center justify-center"
+                style={{ top: "16%", left: "16%", width: "68%", height: "68%" }}
+              >
+                <img
+                  src={LOGO_URL}
+                  alt=""
+                  className="w-full h-full object-contain"
+                  style={{
+                    filter: "brightness(1.7) contrast(0.65) sepia(0.25)",
+                    opacity: 0.75,
+                  }}
+                />
+              </div>
+
+              {/* Pulsing glow */}
+              <motion.div
+                className="absolute rounded-full pointer-events-none"
+                style={{
+                  inset: -16,
+                  background: "radial-gradient(circle, rgba(180,160,130,0.3) 0%, transparent 70%)",
+                  filter: "blur(8px)",
+                }}
+                animate={
+                  !isOpen && appeared
+                    ? { scale: [1, 1.2, 1], opacity: [0.4, 0.7, 0.4] }
+                    : { opacity: 0 }
+                }
+                transition={
+                  !isOpen
+                    ? { duration: 2, repeat: Infinity, ease: "easeInOut" }
+                    : { duration: 0.2 }
+                }
+              />
+
+              {/* Shimmer sweep */}
+              <div className="absolute rounded-full overflow-hidden pointer-events-none" style={{ inset: 0, mixBlendMode: "overlay" }}>
+                <motion.div
+                  style={{
+                    width: "200%", height: "100%",
+                    background: "linear-gradient(105deg, transparent 30%, rgba(255,255,255,0.3) 45%, rgba(255,255,255,0.5) 50%, rgba(255,255,255,0.3) 55%, transparent 70%)",
+                  }}
+                  animate={appeared && !isOpen ? { x: ["-100%", "100%"] } : {}}
+                  transition={{ duration: 1.2, repeat: Infinity, repeatDelay: 1.8, ease: "easeInOut" }}
+                />
+              </div>
+            </motion.div>
+          </div>
+        </div>
+
+        {/* Back face */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(180deg, ${PARCHMENT_DARK} 0%, #B8AE9A 100%)`,
+            backfaceVisibility: "hidden",
+            transform: "rotateX(180deg)",
+          }}
+        />
+      </motion.div>
+
+      {/* ===== BOTTOM HALF - folds downward ===== */}
+      <motion.div
+        className="absolute bottom-0 left-0 right-0"
+        style={{
+          height: "50%",
+          transformOrigin: "bottom center",
+          transformStyle: "preserve-3d",
+          zIndex: 2,
+        }}
+        initial={{ rotateX: 0 }}
+        animate={isOpen ? { rotateX: 180 } : { rotateX: 0 }}
+        transition={{ duration: 1.6, delay: isOpen ? 0.08 : 0, ease: SNAPPY }}
+      >
+        {/* Front face */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: parchmentBg,
+            backfaceVisibility: "hidden",
+          }}
+        >
+          <div className="absolute inset-0" style={textureStyle} />
+
+          {/* Flap fold lines on bottom half (inverted V) */}
+          <div className="absolute pointer-events-none" style={{ top: 0, left: 0, right: 0, height: "100%" }}>
+            <div
+              style={{
+                position: "absolute",
+                top: 0, left: 0,
+                width: "72%", height: 1,
+                background: "linear-gradient(90deg, transparent 5%, rgba(100,85,60,0.18) 40%, rgba(100,85,60,0.22) 100%)",
+                transformOrigin: "top left",
+                transform: "rotate(35deg)",
+              }}
+            />
+            <div
+              style={{
+                position: "absolute",
+                top: 0, right: 0,
+                width: "72%", height: 1,
+                background: "linear-gradient(270deg, transparent 5%, rgba(100,85,60,0.18) 40%, rgba(100,85,60,0.22) 100%)",
+                transformOrigin: "top right",
+                transform: "rotate(-35deg)",
+              }}
+            />
+          </div>
+
+          {/* Shadow at top fold edge */}
+          <div
+            className="absolute top-0 left-0 right-0 pointer-events-none"
+            style={{
+              height: 25,
+              background: "linear-gradient(to bottom, rgba(100,85,60,0.1), transparent)",
+            }}
+          />
+        </div>
+
+        {/* Back face */}
+        <div
+          className="absolute inset-0"
+          style={{
+            background: `linear-gradient(0deg, ${PARCHMENT_DARK} 0%, #B8AE9A 100%)`,
+            backfaceVisibility: "hidden",
+            transform: "rotateX(180deg)",
+          }}
+        />
+      </motion.div>
+
+      {/* Horizontal center line (where the two halves meet) */}
+      <motion.div
+        className="absolute left-0 right-0 pointer-events-none"
+        style={{
+          top: "50%",
+          height: 1,
+          background: "linear-gradient(90deg, transparent 5%, rgba(100,85,60,0.2) 20%, rgba(100,85,60,0.25) 50%, rgba(100,85,60,0.2) 80%, transparent 95%)",
+          zIndex: 5,
+          marginTop: -0.5,
+        }}
+        animate={isOpen ? { opacity: 0 } : { opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      />
+    </div>
   );
 }
